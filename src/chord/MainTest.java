@@ -79,16 +79,16 @@ public class MainTest {
     public static void main(String[] args) {
         MainTest mainTest = getInstance();
         Node newNode0 = new Node(0);
-        Node newNode1 = new Node(1);
-       // Node newNode3 = new Node(3);
-        //Node newNode6 = new Node(6);
+        //Node newNode1 = new Node(1);
+        Node newNode3 = new Node(3);
+        Node newNode6 = new Node(6);
         Chord.join(newNode0, null);
-        Chord.join(newNode1, newNode0);
-        //Chord.join(newNode3, newNode1);
-        //Chord.join(newNode6, newNode3);
+       // Chord.join(newNode1, newNode0);
+        Chord.join(newNode3, newNode0);
+        Chord.join(newNode6, newNode3);
 
-        System.out.println(Chord.find_successor(newNode0, 0).nid);
-        FingerTable ft = newNode1.fingerTable;
+        System.out.println(Chord.find_successor(newNode0, 5).nid);
+        FingerTable ft = newNode6.fingerTable;
         for (int i = 0; i < ft.getNumOfFingers(); i++) {
             System.out.println(ft.getFinger(i).getNode().nid);
         }
