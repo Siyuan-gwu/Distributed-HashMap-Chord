@@ -13,7 +13,6 @@ public class Chord {
             return node;
         }
         Node prevNode = find_predecessor(node, id);
-//        return prevNode.fingerTable.getFinger(0).getNode();
         return prevNode.getSuccessor();
     }
 
@@ -29,10 +28,6 @@ public class Chord {
         int curId = cur.nid;
         int nextId = next.nid;
         if (curId > nextId) {
-            //reach the end of the ring
-//            if (curId < id || id <= nextId) {
-//                return true;
-//            }
             return id > curId || id <= nextId;
         } else if (curId < nextId) {
             //find the successor
@@ -58,7 +53,8 @@ public class Chord {
     }
 
     /**
-     *  join a node to the ring
+     * join a node to the ring
+     *
      * @param node
      * @param existNode
      */
@@ -113,33 +109,36 @@ public class Chord {
         }
     }
 
+    //    private static void updateOthers(Node newNode) {
+//        for (int i = 0; i < 3; i++) {
+//            int id = getId(newNode) - (int) Math.pow(2, i);
+//            if (id < 0) {
+//                id += MainTest.NUMBER_LIMIT;
+//            }
+//            Node needUpdate = find_predecessor(newNode, id);
+//            updateFingerTable(needUpdate, newNode, i);
+//        }
+//    }
     private static void updateOthers(Node newNode) {
         for (int i = 0; i < 3; i++) {
             int id = getId(newNode) - (int) Math.pow(2, i);
             if (id < 0) {
                 id += MainTest.NUMBER_LIMIT;
             }
-            Node needUpdate = find_predecessor(newNode, id);
-            updateFingerTable(needUpdate, newNode, i);
+            if (newNode.predecessor.nid == id) {
+                updateFingerTable(newNode.predecessor, newNode, i);
+            } else {
+                Node needUpdate = find_predecessor(newNode, id);
+                updateFingerTable(needUpdate, newNode, i);
+            }
         }
     }
 
     /**
-     * @TODO need define a method to find previous predecessor
-     * @param node
-     * @param id
-     * @return
-     */
-    private static Node findPreviousNode(Node node, int id) {
-        return null;
-    }
-
-    /**
-     * @INFO: This method has been modified.Å
      * @param needUpdate
      * @param newNode
      * @param i
-     *
+     * @INFO: This method has been modified.Å
      */
     private static void updateFingerTable(Node needUpdate, Node newNode, int i) {
         //the nid of newNode
@@ -170,7 +169,8 @@ public class Chord {
     }
 
     /**
-     *  delete a node from the ring
+     * delete a node from the ring
+     *
      * @param node
      */
     public static void leave(Node node) {
