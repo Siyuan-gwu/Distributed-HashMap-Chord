@@ -17,7 +17,6 @@ public class Chord {
     public static Chord getInstance() {
         return chord;
     }
-
     /**
      * @param newNode
      * @return -1 : input number exceed limit
@@ -56,7 +55,7 @@ public class Chord {
      * @return ith node
      */
     public Node getNodeById(int id) {
-        if (id >= NUMBER_LIMIT) {
+        if (id >= NUMBER_LIMIT || id < 0) {
             return null;
         }
         return nodeRing[id];
@@ -81,7 +80,7 @@ public class Chord {
      * @param id
      * @return id's successor node
      */
-    public Node find_successor(Node node, int id) {
+    public Node lookup(Node node, int id) {
         if (node.nid == id) {
             return node;
         }
@@ -160,7 +159,7 @@ public class Chord {
     private void initFingerTable(Node newNode, Node existNode) {
         FingerTable ft = newNode.fingerTable;
 //        Node temp = find_successor(existNode, existNode.fingerTable.getFinger(0).getStart());
-        Node temp = find_successor(existNode, ft.getFinger(0).getStart());
+        Node temp = lookup(existNode, ft.getFinger(0).getStart());
         System.out.println("successor node id is: " + temp.nid);
 
         ft.getFinger(0).setNode(temp);
@@ -176,7 +175,7 @@ public class Chord {
                 ft.getFinger(i + 1).setNode(ft.getFinger(i).getNode());
                 //System.out.println("The " + (i+1) + "th finger is " + ft.getFinger(i + 1).getNode().nid);
             } else {
-                Node cur = find_successor(existNode, ft.getFinger(i + 1).getStart());
+                Node cur = lookup(existNode, ft.getFinger(i + 1).getStart());
                 ft.getFinger(i + 1).setNode(cur);
             }
         }

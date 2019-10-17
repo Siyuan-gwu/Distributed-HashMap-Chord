@@ -13,7 +13,7 @@ public class MainTest {
         chord.join(newNode6, newNode3);
         chord.join(newNode1, newNode6);
         //Chord.leave(newNode6);
-        System.out.println(chord.find_successor(newNode0, 7).nid);
+        System.out.println(chord.lookup(newNode0, 7).nid);
         FingerTable ft = newNode1.fingerTable;
         for (int i = 0; i < ft.getNumOfFingers(); i++) {
             System.out.println(ft.getFinger(i).getNode().nid);
