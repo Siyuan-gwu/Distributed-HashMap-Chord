@@ -15,11 +15,6 @@ public class Helper {
         }
     }
 
-    /**
-     *
-     * @param i
-     * @return 2^i
-     */
     public static Integer getPowerOfTwo(int i) {
         return powerOfTwo.get(i);
     }
