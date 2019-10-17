@@ -12,18 +12,17 @@ public class MainTest {
     }
 
     /**
-     *
      * @return singleton
      */
     public static MainTest getInstance() {
         return mainTest;
     }
+
     /**
-     *
      * @param newNode
      * @return -1 : input number exceed limit
-     *         1 : the node ring is full
-     *         0 : insert node successfully.
+     * 1 : the node ring is full
+     * 0 : insert node successfully.
      */
     public int addNodeToRing(Node newNode) {
         if (newNode.nid >= NUMBER_LIMIT) {
@@ -37,7 +36,22 @@ public class MainTest {
     }
 
     /**
+     * delete a node from the ring
      *
+     * @param id
+     * @return
+     */
+    public boolean deleteNodeFromRing(int id) {
+        Node delete = getNodeById(id);
+        if (delete == null) {
+            return false;
+        }
+        nodeRing[id] = null;
+        curNumOfNode--;
+        return true;
+    }
+
+    /**
      * @param id
      * @return ith node
      */
@@ -49,7 +63,6 @@ public class MainTest {
     }
 
     /**
-     *
      * @return array of node
      */
     public Node[] getNodeRing() {
@@ -57,7 +70,6 @@ public class MainTest {
     }
 
     /**
-     *
      * @return current number of nodes in the ring
      */
     public int getCurNumOfNode() {
@@ -66,17 +78,19 @@ public class MainTest {
 
     public static void main(String[] args) {
         MainTest mainTest = getInstance();
-        Node newNode = new Node(1);
-        Node newNode1 = new Node(6);
-        Node newNode2 = new Node(3);
-        Node newNode3 = new Node(2);
-        Chord.join(newNode, null);
-        Chord.join(newNode1, newNode);
-        Chord.join(newNode2, newNode1);
-        Chord.join(newNode3, newNode1);
+        Node newNode0 = new Node(0);
+        Node newNode1 = new Node(1);
+       // Node newNode3 = new Node(3);
+        //Node newNode6 = new Node(6);
+        Chord.join(newNode0, null);
+        Chord.join(newNode1, newNode0);
+        //Chord.join(newNode3, newNode1);
+        //Chord.join(newNode6, newNode3);
 
-        System.out.println(mainTest.getCurNumOfNode());
-        System.out.println(Chord.find_successor(newNode, 7).nid);
-        FingerTable ft = newNode.fingerTable;
+        System.out.println(Chord.find_successor(newNode0, 0).nid);
+        FingerTable ft = newNode1.fingerTable;
+        for (int i = 0; i < ft.getNumOfFingers(); i++) {
+            System.out.println(ft.getFinger(i).getNode().nid);
+        }
     }
 }

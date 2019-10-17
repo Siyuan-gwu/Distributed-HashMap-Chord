@@ -12,4 +12,12 @@ public class Node {
         this.fingerTable = new FingerTable(this);
     }
 
+    /**
+     * get the successor of a node
+     * @return
+     */
+    public Node getSuccessor() {
+        return this.fingerTable.getFinger(0).getNode();
+    }
+
 }

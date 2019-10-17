@@ -9,13 +9,17 @@ public class Chord {
      * @return id's successor node
      */
     public static Node find_successor(Node node, int id) {
+        if (node.nid == id) {
+            return node;
+        }
         Node prevNode = find_predecessor(node, id);
-        return prevNode.fingerTable.getFinger(0).getNode();
+//        return prevNode.fingerTable.getFinger(0).getNode();
+        return prevNode.getSuccessor();
     }
 
     private static Node find_predecessor(Node node, int id) {
         Node temp = node;
-        while (!inCurInterval(temp, temp.fingerTable.getFinger(0).getNode(), id)) {
+        while (!inCurInterval(temp, temp.getSuccessor(), id)) {
             temp = closest_preceding_finger(temp, id);
         }
         return temp;
@@ -24,16 +28,18 @@ public class Chord {
     private static boolean inCurInterval(Node cur, Node next, int id) {
         int curId = cur.nid;
         int nextId = next.nid;
-        if (curId >= nextId) {
+        if (curId > nextId) {
             //reach the end of the ring
-            if (curId < id || id <= nextId) {
-                return true;
-            }
-        } else if (curId < id && id <= nextId) {
+//            if (curId < id || id <= nextId) {
+//                return true;
+//            }
+            return id > curId || id <= nextId;
+        } else if (curId < nextId) {
             //find the successor
+            return id > curId && id <= nextId;
+        } else {
             return true;
         }
-        return false;
     }
 
     private static Node closest_preceding_finger(Node cur, int id) {
@@ -47,12 +53,15 @@ public class Chord {
         return cur;
     }
 
-    /**
-     * @TODO updateFingers, join, leave
-     */
     private static int getId(Node node) {
         return node.nid;
     }
+
+    /**
+     *  join a node to the ring
+     * @param node
+     * @param existNode
+     */
     public static void join(Node node, Node existNode) {
         // need to edit
         //add node to the ring
@@ -76,7 +85,7 @@ public class Chord {
             }
             node.predecessor = node;
         }
-        System.out.println("join node No." + node.nid + " successfully.");
+        //System.out.println("join node No." + node.nid + " successfully.");
     }
 
     private static void initFingerTable(Node newNode, Node existNode) {
@@ -86,7 +95,7 @@ public class Chord {
         System.out.println("successor node id is: " + temp.nid);
 
         ft.getFinger(0).setNode(temp);
-        System.out.println("initial table: finger id is " + ft.getFinger(0).getNode().nid);
+//        System.out.println("initial table: finger id is " + ft.getFinger(0).getNode().nid);
         newNode.predecessor = temp.predecessor;
         temp.predecessor = newNode;
         for (int i = 0; i < 2; i++) {
@@ -96,7 +105,7 @@ public class Chord {
              */
             if (judgement(start, newNode, i)) {
                 ft.getFinger(i + 1).setNode(ft.getFinger(i).getNode());
-                System.out.println("The " + (i+1) + "th finger is " + ft.getFinger(i + 1).getNode().nid);
+                //System.out.println("The " + (i+1) + "th finger is " + ft.getFinger(i + 1).getNode().nid);
             } else {
                 Node cur = find_successor(existNode, ft.getFinger(i + 1).getStart());
                 ft.getFinger(i + 1).setNode(cur);
@@ -110,10 +119,19 @@ public class Chord {
             if (id < 0) {
                 id += MainTest.NUMBER_LIMIT;
             }
-//            Node temp = newNode.find_predecessor(newNode,getId(newNode) - (int)Math.pow(2, i));
             Node needUpdate = find_predecessor(newNode, id);
             updateFingerTable(needUpdate, newNode, i);
         }
+    }
+
+    /**
+     * @TODO need define a method to find previous predecessor
+     * @param node
+     * @param id
+     * @return
+     */
+    private static Node findPreviousNode(Node node, int id) {
+        return null;
     }
 
     /**
@@ -124,24 +142,20 @@ public class Chord {
      *
      */
     private static void updateFingerTable(Node needUpdate, Node newNode, int i) {
-//        Node newNode = new Node(nid = id);
-//        int id = getId(newNode);
         //the nid of newNode
-        if (i >= 3) {
+        if (needUpdate == newNode) {
             return;
         }
         int newNodeId = getId(newNode);
         FingerTable ft = needUpdate.fingerTable;
         //if newNode is ith finger of node(needModify), then update needModify.fingers[i] = newNode
         if (judgement(newNodeId, needUpdate, i)) {
-            Node temp = ft.getFinger(i).getNode();
             ft.getFinger(i).setNode(newNode);
             Node prev = needUpdate.predecessor;
             /**
              * need to update the finger[i] of previous nodes
              */
             updateFingerTable(prev, newNode, i);
-//            updateFingerTable(needModify, newNode, i);
         }
     }
 
@@ -151,11 +165,14 @@ public class Chord {
         if (left < right) {
             return (start >= left && start < right);
         } else {
-            //return (start >= right && start < left + MainTest.NUMBER_LIMIT) || (start <= right && start < left);
             return start >= left || start < right;
         }
     }
 
+    /**
+     *  delete a node from the ring
+     * @param node
+     */
     public static void leave(Node node) {
 
     }

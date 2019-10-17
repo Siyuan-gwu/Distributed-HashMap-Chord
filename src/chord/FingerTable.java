@@ -14,8 +14,7 @@ public class FingerTable {
         for (int i = 0; i < 3; i++) {
             int start = (node.nid + (int)Math.pow(2, i)) % MainTest.NUMBER_LIMIT;
             //get the node of finger[i].start
-            Node fingerNode = node;
-            fingers.add(new Finger(start, fingerNode));
+            fingers.add(new Finger(start, null));
         }
     }
     public int getNumOfFingers() {
