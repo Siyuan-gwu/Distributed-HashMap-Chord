@@ -171,9 +171,54 @@ public class Chord {
     /**
      * delete a node from the ring
      *
-     * @param node
+     * @param leaveNode
      */
-    public static void leave(Node node) {
+    public static void leave(Node leaveNode) {
+        MainTest mainTest = MainTest.getInstance();
+        if (!mainTest.deleteNodeFromRing(leaveNode.nid)) {
+            System.out.println("The node doesn't exist.");
+            return;
+        }
+        Node prev = leaveNode.predecessor;
+        Node succ = leaveNode.getSuccessor();
+        for(int i = 0; i < 3; i++){
+            int id = getId(leaveNode) - (int)Math.pow(2,i);
+            if (id < 0) {
+                id += MainTest.NUMBER_LIMIT;
+            }
+            if(prev.nid == id){
+                updateFingerTable1(prev,leaveNode,i,succ);
+            }else {
+                Node needUpdate = find_predecessor(leaveNode, id);
+                updateFingerTable1(needUpdate, leaveNode, i,succ);
+            }
 
+        }
+        // initial the leave node
+        leaveNode.fingerTable = new FingerTable(leaveNode);
+        leaveNode.predecessor = null;
+        succ.predecessor = prev;
+    }
+    private static void updateFingerTable1(Node needUpdate, Node leaveNode,int i,Node succ){
+        if (needUpdate == leaveNode) {
+            return;
+        }
+        FingerTable ft = needUpdate.fingerTable;
+        if(ft.getFinger(i).getNode() == leaveNode) {
+            ft.getFinger(i).setNode(succ);
+            Node prev = needUpdate.predecessor;
+            updateFingerTable1(prev, leaveNode, i, succ);
+        }
+        /**
+         * time complexity is O(n) need improve here
+         */
+//        int leaveId = leaveNode.nid;
+//        if(judgement(leaveId,needUpdate,i)){
+//            if(ft.getFinger(i).getNode() == leaveNode){
+//                ft.getFinger(i).setNode(succ);
+//            }
+//            Node prev = needUpdate.predecessor;
+//            updateFingerTable1(prev,leaveNode,i,succ);
+//        }
     }
 }

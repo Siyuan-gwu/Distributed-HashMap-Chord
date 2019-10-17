@@ -86,8 +86,9 @@ public class MainTest {
         Chord.join(newNode3, newNode0);
         Chord.join(newNode6, newNode3);
         Chord.join(newNode1, newNode6);
+        Chord.leave(newNode1);
         System.out.println(Chord.find_successor(newNode0, 7).nid);
-        FingerTable ft = newNode0.fingerTable;
+        FingerTable ft = newNode6.fingerTable;
         for (int i = 0; i < ft.getNumOfFingers(); i++) {
             System.out.println(ft.getFinger(i).getNode().nid);
         }
